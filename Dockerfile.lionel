@@ -1,0 +1,17 @@
+ARG BASE_IMAGE="sambuc/renku-zsh:latest"
+FROM ${BASE_IMAGE}
+
+SHELL ["/bin/sh", "-c"]
+USER root
+
+RUN apk add --no-cache make clang20
+
+# Setup zsh env
+COPY castle /home/renku/castle
+RUN chown -R renku:renku /home/renku/castle
+
+USER renku
+RUN \
+	cd /home/renku/castle && \
+	make omz zsh
+

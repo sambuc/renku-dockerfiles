@@ -1,0 +1,3 @@
+[submodule "castle"]
+	path = castle
+	url = https://github.com/sambuc/castle

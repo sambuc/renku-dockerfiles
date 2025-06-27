@@ -1,0 +1,28 @@
+ARG BASE_IMAGE="alpine:latest"
+FROM ${BASE_IMAGE}
+
+ARG TTYD_URL=https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64
+
+SHELL ["/bin/sh", "-c"]
+
+RUN \
+	apk add --no-cache curl bash tini && \
+	curl -Lo /usr/local/bin/ttyd "${TTYD_URL}" && \
+	chmod 755 /usr/local/bin/ttyd
+
+# tmux is used to be able to persist state between web page refreshes
+RUN \
+	apk add --no-cache tmux && \
+	addgroup -g 1000 renku && \
+	adduser -u 1000 -G renku -s /bin/bash -D renku
+
+WORKDIR /home/renku
+USER renku
+ENV LC_ALL=C.UTF-8
+
+ENTRYPOINT  ["/sbin/tini", "--"]
+CMD ttyd \
+	--cwd "${RENKU_WORKING_DIR:-${HOME}}" \
+	--port "${RENKU_SESSION_PORT:-8888}" \
+	--base-path "${RENKU_BASE_URL_PATH:-/}" \
+	--writable sh -c 'tmux attach || tmux'
