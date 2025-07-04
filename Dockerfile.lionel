@@ -7,11 +7,12 @@ USER root
 RUN apk add --no-cache make clang20
 
 # Setup zsh env
-COPY castle /home/renku/castle
-RUN chown -R renku:renku /home/renku/castle
+ARG CASTLE_PATH="/home/renku/castle"
+COPY castle ${CASTLE_PATH}
+RUN chown -R renku:renku ${CASTLE_PATH}
 
 USER renku
 RUN \
-	cd /home/renku/castle && \
+	cd ${CASTLE_PATH} && \
 	make tmux vim omz zsh
 
