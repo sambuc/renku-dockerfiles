@@ -13,8 +13,8 @@ RUN \
 	apt-get update && \
 	apt-get install -y --fix-missing xpra
 
-#RUN \
-#	apt-get install -y rxvt-unicode
+RUN \
+	apt-get install -y rxvt-unicode
 
 WORKDIR /home/ubuntu
 USER ubuntu
@@ -34,5 +34,5 @@ CMD xpra seamless \
 	--clipboard-direction=yes \
 	--exit-with-children=no \
 	--bind-tcp="0.0.0.0:${RENKU_SESSION_PORT:-8888}" \
-	--start=xterm
+	--start=rxvt
 

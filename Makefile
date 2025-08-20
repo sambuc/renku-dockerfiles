@@ -7,13 +7,17 @@ IMAGES ?= \
 	base \
 	zsh \
 	lionel \
-	xpra
+	xpra \
+	xpra-rxvt \
+	xpra-xfce4
 
 all: ${IMAGES}
 
 base:
 zsh: base
 lionel: zsh
+xpra-rxvt: xpra
+xpra-xfce4: xpra
 
 %: Dockerfile.%
 	@echo
