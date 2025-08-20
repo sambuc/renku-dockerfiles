@@ -6,7 +6,8 @@ PUSH_IMAGE ?= false
 IMAGES ?= \
 	base \
 	zsh \
-	lionel
+	lionel \
+	xpra
 
 all: ${IMAGES}
 

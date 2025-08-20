@@ -1,0 +1,38 @@
+ARG BASE_IMAGE="ubuntu:25.04"
+FROM ${BASE_IMAGE}
+
+SHELL ["/bin/sh", "-c"]
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN \
+	apt-get update && \
+	apt-get install -y --fix-missing curl tini apt-transport-https ca-certificates software-properties-common && \
+	curl -1sLf -o "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc && \
+	curl -1sLf -o "/etc/apt/sources.list.d/xpra.sources" https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/plucky/xpra.sources && \
+	apt-get update && \
+	apt-get install -y --fix-missing xpra
+
+RUN \
+	apt-get install -y xfce4 xfce4-goodies
+
+WORKDIR /home/ubuntu
+USER ubuntu
+ENV LC_ALL=C.UTF-8
+
+ENTRYPOINT  ["/usr/bin/tini", "--" ]
+
+CMD xpra seamless \
+	--daemon=no \
+	--ssl=no \
+	--http=yes \
+	--systemd-run=no \
+	--webcam=no \
+	--no-audio \
+	--printing=no \
+	--clipboard=yes \
+	--clipboard-direction=yes \
+	--exit-with-children=no \
+	--bind-tcp="0.0.0.0:${RENKU_SESSION_PORT:-8888}" \
+	--start=xfce4-terminal
+
