@@ -7,14 +7,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN \
 	apt-get update && \
-	apt-get install -y --fix-missing curl tini apt-transport-https ca-certificates software-properties-common && \
+	apt-get install -y --no-install-recommends curl tini apt-transport-https ca-certificates software-properties-common && \
 	curl -1sLf -o "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc && \
 	curl -1sLf -o "/etc/apt/sources.list.d/xpra.sources" https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/plucky/xpra.sources && \
 	apt-get update && \
-	apt-get install -y --fix-missing xpra
+	apt-get install -y --no-install-recommends xterm xpra xpra-x11 xpra-html5 xpra-client-qt6 xpra-codecs-extras dbus-x11 libx264-* xdg-utils python3-xdg menu-xdg menu
 
-#RUN \
-#	apt-get install -y rxvt-unicode
+
+RUN mkdir -p /run/user/1000 && chown 1000:1000 /run/user/1000
 
 WORKDIR /home/ubuntu
 USER ubuntu
@@ -24,15 +24,16 @@ ENTRYPOINT  ["/usr/bin/tini", "--" ]
 
 CMD xpra seamless \
 	--daemon=no \
-	--ssl=no \
+	--mdns=no \
 	--http=yes \
 	--systemd-run=no \
 	--webcam=no \
 	--no-audio \
 	--printing=no \
 	--clipboard=yes \
-	--clipboard-direction=yes \
+	--clipboard-direction=both \
 	--exit-with-children=no \
+	--notifications=no \
 	--bind-tcp="0.0.0.0:${RENKU_SESSION_PORT:-8888}" \
 	--start=xterm
 

@@ -1,0 +1,13 @@
+ARG TAG_VERSION=":latest"
+ARG BASE_IMAGE="sambuc/renku-xpra${TAG_VERSION}-xfce4"
+FROM ${BASE_IMAGE}
+
+SHELL ["/bin/sh", "-c"]
+
+USER root
+
+RUN \
+	curl -1sLf https://download.knime.org/analytics-platform/linux/knime_5.4.4.linux.gtk.x86_64.tar.gz | tar -xz -C /opt && \
+	mv /opt/knime* /opt/knime
+
+USER ubuntu

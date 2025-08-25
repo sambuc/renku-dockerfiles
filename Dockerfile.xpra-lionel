@@ -1,0 +1,22 @@
+ARG TAG_VERSION=":latest"
+ARG BASE_IMAGE="sambuc/renku-xpra${TAG_VERSION}-xfce4"
+FROM ${BASE_IMAGE}
+
+SHELL ["/bin/sh", "-c"]
+
+USER root
+
+RUN \
+	apt-get install -y --no-install-recommends zsh tmux tree bat du-dust ssh git git-lfs vim htop build-essential clang
+
+# Setup zsh env
+ARG CASTLE_PATH="/home/ubuntu/castle"
+COPY castle ${CASTLE_PATH}
+RUN chown -R ubuntu:ubuntu ${CASTLE_PATH}
+
+USER ubuntu
+
+RUN \
+	cd ${CASTLE_PATH} && \
+	make tmux vim omz zsh x11
+

@@ -1,4 +1,5 @@
-ARG BASE_IMAGE="sambuc/renku-base:latest"
+ARG TAG_VERSION=":latest"
+ARG BASE_IMAGE="sambuc/renku-shell${TAG_VERSION}"
 FROM ${BASE_IMAGE}
 
 SHELL ["/bin/sh", "-c"]
