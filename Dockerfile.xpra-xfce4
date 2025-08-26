@@ -7,7 +7,7 @@ SHELL ["/bin/sh", "-c"]
 USER root
 
 RUN \
-	apt-get install -y --no-install-recommends xfce4 xfce4-goodies
+	apt-get install -y --install-recommends xfce4 xfce4-goodies
 
 USER ubuntu
 
