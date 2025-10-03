@@ -34,6 +34,7 @@ xpra-rxvt: xpra
 xpra-xfce4: xpra
 xpra-lionel: xpra-xfce4
 xpra-knime: xpra-xfce4
+xpra-fiji: xpra-xfce4
 
 %: Dockerfile.%
 	@echo

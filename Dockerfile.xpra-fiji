@@ -1,0 +1,39 @@
+ARG TAG_VERSION=":latest"
+ARG BASE_IMAGE="sambuc/renku-xpra${TAG_VERSION}-xfce4"
+FROM ${BASE_IMAGE}
+
+SHELL ["/bin/sh", "-c"]
+
+USER root
+
+RUN \
+	apt-get update && \
+	apt-get install -y curl unzip
+
+RUN \
+	curl -1sLf https://downloads.imagej.net/fiji/archive/stable/20250808-2217/fiji-stable-linux64-jdk.zip -o /tmp/fiji.zip
+
+RUN \
+	cd /home/ubuntu/ && \
+	unzip /tmp/fiji.zip && \
+	chown -R ubuntu:ubuntu Fiji.app
+
+COPY ./files/renku-wallpaper-4k.png /usr/share/xpra/www/background.png
+
+USER ubuntu
+
+CMD xpra seamless \
+	--daemon=no \
+	--mdns=no \
+	--http=yes \
+	--systemd-run=no \
+	--webcam=no \
+	--no-audio \
+	--printing=no \
+	--clipboard=yes \
+	--clipboard-direction=both \
+	--exit-with-children=no \
+	--notifications=no \
+	--bind-tcp="0.0.0.0:${RENKU_SESSION_PORT:-8888}" \
+	--start=/home/ubuntu/Fiji.app/fiji
+
