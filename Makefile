@@ -2,6 +2,7 @@ TAG_PREFIX ?= sambuc/renku
 TAG_VERSION ?= :latest
 DOCKER_PLATFORM ?= --platform linux/amd64
 PUSH_IMAGE ?= false
+BUILD_OPTIONS ?=
 
 SHELLS := \
 	shell \
@@ -39,6 +40,6 @@ xpra-fiji: xpra-xfce4
 %: Dockerfile.%
 	@echo
 	@echo "######## BUILDING ${@} ########"
-	docker build . -f ${<} ${DOCKER_PLATFORM} -t ${TAG} --build-arg TAG_VERSION=${TAG_VERSION}
+	docker build ${BUILD_OPTIONS} . -f ${<} ${DOCKER_PLATFORM} -t ${TAG} --build-arg TAG_VERSION=${TAG_VERSION}
 	@${PUSH_IMAGE} && echo "######## PUSHING ${TAG} ########" || true
 	${PUSH_IMAGE} && docker push ${TAG} || true
